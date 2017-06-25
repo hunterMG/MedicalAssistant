@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+
+        Toast.makeText(this, "welcome "+username, Toast.LENGTH_LONG).show();
 
         nursecomeBtn = (ImageButton)findViewById(R.id.ibNursecome);
         massageBtn = (ImageButton)findViewById(R.id.ibMassage);

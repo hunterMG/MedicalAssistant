@@ -3,6 +3,7 @@ package com.example.yg.myapplication;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -30,6 +31,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,8 +99,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(R.id.register_form);
-        mProgressView = findViewById(R.id.register_progress);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+
         tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
         tvRegisterLink.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -318,7 +325,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
+/*
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -333,7 +340,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     return pieces[1].equals(mPassword);
                 }
             }
+*/
+            // Response received from the server
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
 
+                        if (success) {
+                            /*
+                            String name = jsonResponse.getString("name");
+                            int age = jsonResponse.getInt("age");
+                            */
+                            String username = jsonResponse.getString("name");
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("email", mEmail);
+                            intent.putExtra("username",username);
+                            LoginActivity.this.startActivity(intent);
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setMessage("Login Failed")
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            String password = MD5Util.getMD5Str(MD5Util.getMD5Str(mPassword));
+            LoginRequest loginRequest = new LoginRequest(mEmail, password, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+            queue.add(loginRequest);
             // TODO: register the new account here.
             return true;
         }
@@ -350,9 +392,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            LoginActivity.this.finish();
+
         }
 
         @Override
