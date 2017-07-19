@@ -1,23 +1,26 @@
 <?php
-    $con = mysqli_connect("localhost", "root", "yg789", "medical");
-    
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-    
-    $statement = mysqli_prepare($con, "SELECT * FROM USER WHERE id = ? AND pswd = ?");
-    mysqli_stmt_bind_param($statement, "ss", $email, $password);
-    mysqli_stmt_execute($statement);
-    
-    mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $id, $pswd, $name, $addr);
-    
-    $response = array();
-    $response["success"] = false;  
-    
-    while(mysqli_stmt_fetch($statement)){
-        $response["success"] = true;  
-        $response["name"] = $name;
-    }
-    
-    echo json_encode($response);
+error_reporting(0);
+$mysqli = new mysqli("localhost", "id2064581_root", "mY_1099", "id2064581_medical");
+$email = $_POST["email"];
+$password = $_POST["password"];
+#$email = "1@1.com";
+#$password = md5(md5("1111222"));
+$name = null;
+$stmt = $mysqli->stmt_init();
+if($stmt->prepare( "SELECT * FROM USER WHERE id = ? AND pswd = ?")){
+    $stmt->bind_param( "ss", $email, $password);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result( $id, $pswd, $name, $addr);
+}
+$response = array();
+$response["success"] = false;
+
+while($stmt->fetch()){
+    $response["success"] = true;
+    $response["name"] = $name;
+}
+$stmt->close();
+$mysqli->close();
+echo json_encode($response);
 ?>

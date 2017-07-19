@@ -1,15 +1,22 @@
 <?php
-    $con = mysqli_connect("localhost", "root", "yg789", "medical");
-    
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+error_reporting(0);
+$mysqli = new mysqli("localhost", "id2064581_root", "mY_1099", "id2064581_medical");
+$email = $_POST["email"];
+$password = $_POST["password"];
 
-    $statement = mysqli_prepare($con, "INSERT INTO USER(id, pswd) VALUES (?, ?)");
-    mysqli_stmt_bind_param($statement, "ss", $email, $password);
-    mysqli_stmt_execute($statement);
-    
-    $response = array();
-    $response["success"] = true;  
-    
-    echo json_encode($response);
+$stmt = $mysqli->stmt_init();
+$response = array();
+if($stmt->prepare("INSERT INTO USER(id, pswd) VALUES (?, ?)")){
+    $stmt->bind_param( "ss", $email, $password);
+    if($stmt->execute()){
+        $response["success"] = true;
+    }else{
+        $response["success"] = false;
+    }
+    $stmt->close();
+}else{
+    $response["success"] = false;
+}
+echo json_encode($response);
+$mysqli->close();
 ?>

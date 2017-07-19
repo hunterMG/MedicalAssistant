@@ -340,6 +340,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         boolean success = jsonResponse.getBoolean("success");
                         if (success) {
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            intent.putExtra("username", mEmail);
                             RegisterActivity.this.startActivity(intent);
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
