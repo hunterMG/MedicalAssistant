@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MedicalAssistant/MedicalAssistant.iml" filepath="$PROJECT_DIR$/MedicalAssistant/MedicalAssistant.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyApplication2.iml" filepath="$PROJECT_DIR$/MyApplication2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MedicalAssistant.iml" filepath="$PROJECT_DIR$/MedicalAssistant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MedicalAssistant/MedicalAssistant-MedicalAssistant.iml" filepath="$PROJECT_DIR$/MedicalAssistant/MedicalAssistant-MedicalAssistant.iml" />
     </modules>
   </component>
 </project>
